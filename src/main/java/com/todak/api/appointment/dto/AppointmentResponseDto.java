@@ -1,4 +1,4 @@
-package com.todak.api.hospital.dto.response;
+package com.todak.api.appointment.dto;
 
 import lombok.*;
 import java.time.LocalDateTime;
