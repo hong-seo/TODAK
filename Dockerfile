@@ -13,9 +13,9 @@ COPY settings.gradle.kts .
 
 COPY src src
 
-RUN ./gradlew clean build -x test
+RUN chmod +x ./gradlew
 
-# ----------------------------------------------------
+RUN ./gradlew clean build -x test
 
 # 6. 최종 실행 환경 설정 (JRE만 포함된 경량 이미지 사용)
 FROM eclipse-temurin:17-jre-focal
