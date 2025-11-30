@@ -35,8 +35,9 @@ public class SummaryController {
     public ResponseEntity<SummaryResponseDto> getSummary(
             @PathVariable Long consultationId
     ) {
-        SummaryResponseDto response = summaryService.getSummaryByConsultation(consultationId);
-      
+        // [수정됨] getSummaryByConsultation -> getLatestByConsultation
+        SummaryResponseDto response = summaryService.getLatestByConsultation(consultationId);
+
         return ResponseEntity.ok(response);
     }
 }
