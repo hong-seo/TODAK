@@ -64,12 +64,12 @@ public class ConsultationServiceImpl implements ConsultationService {
                 .orElseThrow(() -> new IllegalArgumentException("Consultation not found"));
 
         // Summary (latest)
-        Summary summary = summaryRepository.findTopByConsultationIdOrderByCreatedAtDesc(consultationId)
+        Summary summary = summaryRepository.findByConsultationId(consultationId)
                 .orElse(null);
 
         // Recording (latest)
-        Recording recording = recordingRepository.findByConsultationId(consultationId)
-                .orElse(null);
+        Recording recording = recordingRepository.findFirstByConsultation_ConsultationId(consultationId)
+                .orElseThrow(() -> new IllegalArgumentException("recording not found"));
 
         return ConsultationDetailResponseDto.builder()
                 .consultationId(c.getConsultationId())
@@ -105,7 +105,7 @@ public class ConsultationServiceImpl implements ConsultationService {
                 .stream()
                 .map(c -> {
 
-                    Summary summary = summaryRepository.findTopByConsultationIdOrderByCreatedAtDesc(
+                    Summary summary = summaryRepository.findByConsultationId(
                             c.getConsultationId()).orElse(null);
 
                     return ConsultationListResponseDto.builder()
@@ -132,7 +132,7 @@ public class ConsultationServiceImpl implements ConsultationService {
                 .stream()
                 .map(c -> {
 
-                    Summary summary = summaryRepository.findTopByConsultationIdOrderByCreatedAtDesc(
+                    Summary summary = summaryRepository.findByConsultationId(
                             c.getConsultationId()).orElse(null);
 
                     return ConsultationListResponseDto.builder()

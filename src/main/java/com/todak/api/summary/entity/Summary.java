@@ -20,17 +20,19 @@ public class Summary {
     @Column(name = "summary_id")
     private Long summaryId;
 
-    @Column(name = "consultation_id")
+    @Column(name = "consultation_id", nullable = false)
     private Long consultationId;
 
-    @Column(name = "recording_id")
+    @Column(name = "recording_id", nullable = false)
     private Long recordingId;
 
-    // 요약 텍스트
-    @Column(columnDefinition = "TEXT")
+    /**
+     * 요약 결과 텍스트 전체
+     * (JSON X, 하나의 plain text)
+     */
+    @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
 
-    // 태그 (JSON 문자열 또는 콤마 문자열)
     @Column(columnDefinition = "TEXT")
     private String tags;
 

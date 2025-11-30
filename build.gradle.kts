@@ -45,6 +45,7 @@ dependencies {
 	runtimeOnly("org.postgresql:postgresql") // Supabase(PostgreSQL)용
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.springframework.security:spring-security-test")
+	implementation("org.springframework:spring-test")
 }
 
 tasks.withType<Test> {
