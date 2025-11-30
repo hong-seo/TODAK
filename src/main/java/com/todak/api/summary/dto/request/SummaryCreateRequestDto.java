@@ -6,10 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class SummaryCreateRequestDto {
-
-    private Long consultationId;  // optional
-    private Long recordingId;     // optional
-
-    private String content;       // 요약 본문
-    private String tags;          // 주요 태그 (콤마 or JSON 문자열)
+    private Long consultationId;
+    private Long recordingId;
+    //STT는 이미 DB에 있으며, 요약은 Spring이 AI 서버에 요청할 때 transcript를 넣는다.
 }

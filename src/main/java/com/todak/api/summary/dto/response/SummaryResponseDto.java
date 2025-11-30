@@ -14,7 +14,6 @@ public class SummaryResponseDto {
     private Long consultationId;
     private Long recordingId;
     private String content;
-    private String tags;
     private OffsetDateTime createdAt;
 
     public static SummaryResponseDto from(Summary summary) {
@@ -23,9 +22,7 @@ public class SummaryResponseDto {
                 .consultationId(summary.getConsultationId())
                 .recordingId(summary.getRecordingId())
                 .content(summary.getContent())
-                .tags(summary.getTags())
                 .createdAt(summary.getCreatedAt())
                 .build();
     }
 }
-
