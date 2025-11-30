@@ -22,10 +22,10 @@ public class AiClient {
 
     private final RestTemplate restTemplate;
 
-    @Value("${ai.server.base-url}")
+    @Value("${ai.server.url}")
     private String aiBaseUrl;
 
-    @Value("${ai.server.internal-key}")
+    @Value("${ai.server.key}")
     private String internalKey;
     /**
      * Spring → AI 서버에 Whisper STT 요청
