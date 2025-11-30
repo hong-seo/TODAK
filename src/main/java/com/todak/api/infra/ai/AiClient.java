@@ -22,10 +22,10 @@ public class AiClient {
 
     private final RestTemplate restTemplate;
 
-    @Value("${ai.server.base-url}")
+    @Value("${ai.server.url}")
     private String aiBaseUrl;
 
-    @Value("${ai.server.internal-key}")
+    @Value("${ai.server.key}")
     private String internalKey;
     /**
      * Spring → AI 서버에 Whisper STT 요청
@@ -36,9 +36,7 @@ public class AiClient {
             MultipartFile file
     ) {
         try {
-            // -----------------------------
             // multipart/form-data 구성
-            // -----------------------------
             MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
             body.add("recordingId", recordingId.toString());
             body.add("consultationId", consultationId.toString());
@@ -55,9 +53,7 @@ public class AiClient {
 
             body.add("file", fileEntity);
 
-            // -----------------------------
             // 최상위 Header
-            // -----------------------------
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.MULTIPART_FORM_DATA);
             headers.set("X-Internal-Key", internalKey);
