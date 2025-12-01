@@ -1,12 +1,12 @@
 package com.todak.api.consultation.entity;
 
 import com.todak.api.hospital.entity.Hospital;
+import com.todak.api.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.OffsetDateTime;
-import java.util.UUID;
 
 @Entity
 @Getter
@@ -40,8 +40,9 @@ public class Consultation {
     /**
      * 환자 UUID (users 테이블의 PK)
      */
-    @Column(name = "patient_id", nullable = false)
-    private UUID patientId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "patient_id", referencedColumnName = "user_uuid", nullable = false)
+    private User patient;
 
     /**
      * 진료 시작 시간 = 예약 시간 (조회 시 캘린더/리스트에서 쓰임)

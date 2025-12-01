@@ -3,10 +3,10 @@ package com.todak.api.appointment.entity;
 import com.todak.api.hospital.entity.Hospital;
 import com.todak.api.hospital.entity.Department;
 import com.todak.api.hospital.entity.Doctor;
+import com.todak.api.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.OffsetDateTime;
-import java.util.UUID;
 
 @Entity
 @Getter
@@ -23,9 +23,9 @@ public class Appointment {
     @Column(name = "appointment_id")
     private Long appointmentId;
 
-    /** patient_id (FK → users, UUID) */
-    @Column(name = "patient_id", nullable = false)
-    private UUID patientId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "patient_id", referencedColumnName = "user_uuid", nullable = false)
+    private User patient;
 
     /** hospital_id (FK → hospitals) */
     @ManyToOne(fetch = FetchType.LAZY)

@@ -2,6 +2,7 @@ package com.todak.api.recording.entity;
 
 import com.todak.api.consultation.entity.Consultation;
 import com.todak.api.hospital.entity.Hospital;
+import com.todak.api.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -21,6 +22,10 @@ public class Recording {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "recording_id")
     private Long recordingId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "patient_id", referencedColumnName = "user_uuid", nullable = false)
+    private User patient;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "consultation_id", nullable = false)
