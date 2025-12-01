@@ -7,8 +7,8 @@ spring:
     password: chlgmltn04!      # ← 네가 Supabase에서 설정한 DB 비번
     driver-class-name: org.postgresql.Driver
     hikari:
-      maximum-pool-size: 2      # 5 -> 2로 변경
-      minimum-idle: 1           # 2 -> 1로 변경
+      maximum-pool-size: 4
+      minimum-idle: 1
       connection-timeout: 30000 # 10000 -> 30000
       max-lifetime: 1800000
 

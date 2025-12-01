@@ -26,8 +26,14 @@ public class AuthService {
      * 카카오 로그인 (앱에서 받은 AccessToken으로 로그인 처리)
      */
     public TokenResponse kakaoLogin(String kakaoAccessToken) {
+
+        // 1. 토큰이 비어있는지 확인 (안전장치)
+        if (kakaoAccessToken == null || kakaoAccessToken.isEmpty()) {
+            throw new RuntimeException("프론트엔드로부터 전달받은 카카오 토큰이 비어있습니다.");
+        }
+
         Long kakaoUserId = kakaoAuthService.getKakaoUserId(kakaoAccessToken);
-        // 3. 우리 서비스 전용 JWT 토큰 발급
+
         String accessToken = jwtTokenProvider.createToken(kakaoUserId, "USER");
 
         return new TokenResponse(accessToken, "refresh_token_dummy");
