@@ -38,11 +38,13 @@ public class KakaoAuthService {
      * 2. Access Token으로 유저 정보 가져오기
      */
     public Long getKakaoUserId(String accessToken) {
-        log.info("🔍 [KakaoAuthService] 사용자 정보 요청. Token 존재 여부: {}", (accessToken != null && !accessToken.isEmpty()));
+        log.info("[KakaoAuthService] 사용자 정보 요청. Token 존재 여부: {}", (accessToken != null && !accessToken.isEmpty()));
+        if (accessToken.startsWith("Bearer ")) {
+            accessToken = accessToken.substring(7);
+        }
 
         try {
             HttpHeaders headers = new HttpHeaders();
-            // [중요] Bearer 다음에 공백이 꼭 있어야 합니다.
             headers.add(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken);
             headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
