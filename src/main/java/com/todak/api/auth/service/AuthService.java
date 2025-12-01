@@ -13,21 +13,23 @@ public class AuthService {
     private final JwtTokenProvider jwtTokenProvider;
     private final KakaoAuthService kakaoAuthService;
 
+    // 병원(관리자) 로그인
     public TokenResponse hospitalLogin(String loginId, String password) {
-        // 임시 로직: 아이디가 'admin'이고 비번이 '1234'면 로그인 성공
         if ("admin".equals(loginId) && "1234".equals(password)) {
-            // 관리자 토큰 발급 (ID: 1, 역할: ADMIN)
             String accessToken = jwtTokenProvider.createToken(1L, "ADMIN");
             return new TokenResponse(accessToken, "refresh_token_dummy");
         }
         throw new RuntimeException("아이디 또는 비밀번호가 일치하지 않습니다.");
     }
 
-    public TokenResponse kakaoLogin(String authCode) {
-        // ... (기존 카카오 로그인 로직 유지)
-        String kakaoAccessToken = kakaoAuthService.getAccessToken(authCode);
+    /**
+     * 카카오 로그인 (앱에서 받은 AccessToken으로 로그인 처리)
+     */
+    public TokenResponse kakaoLogin(String kakaoAccessToken) {
         Long kakaoUserId = kakaoAuthService.getKakaoUserId(kakaoAccessToken);
+        // 3. 우리 서비스 전용 JWT 토큰 발급
         String accessToken = jwtTokenProvider.createToken(kakaoUserId, "USER");
+
         return new TokenResponse(accessToken, "refresh_token_dummy");
     }
 }
