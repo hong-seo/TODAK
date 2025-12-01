@@ -5,11 +5,11 @@ import com.todak.api.consultation.dto.request.*;
 import com.todak.api.consultation.service.ConsultationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/consultations")
@@ -20,26 +20,26 @@ public class ConsultationController {
 
     /**
      * 1) 진료 생성
-     * POST /api/v1/consultations/start?appointmentId=10&patientId=uuid
+     * POST /api/consultations/start?appointmentId=10
      */
     @PostMapping("/start")
     public ResponseEntity<ConsultationCreateResponseDto> startConsultation(
-            @RequestParam Long appointmentId,
-            @RequestParam UUID patientId
+            @AuthenticationPrincipal Long kakaoId,
+            @RequestParam Long appointmentId
     ) {
         ConsultationCreateResponseDto response =
-                consultationService.startConsultation(appointmentId, patientId);
+                consultationService.startConsultation(appointmentId, kakaoId);
 
         return ResponseEntity.ok(response);
     }
 
-
     /**
      * 2) 진료 상세 조회
-     * GET /api/v1/consultations/{consultationId}
+     * GET /api/consultations/{consultationId}
      */
     @GetMapping("/{consultationId}")
     public ResponseEntity<ConsultationDetailResponseDto> getConsultationDetail(
+            @AuthenticationPrincipal Long kakaoId,
             @PathVariable Long consultationId
     ) {
         ConsultationDetailResponseDto response =
@@ -48,35 +48,33 @@ public class ConsultationController {
         return ResponseEntity.ok(response);
     }
 
-
     /**
-     * 3) 내 전체 진료 이력 조회
-     * GET /api/v1/consultations/my?patientId=uuid
+     * 3) 나의 전체 진료 이력 조회
+     * GET /api/consultations/my
      */
     @GetMapping("/my")
     public ResponseEntity<List<ConsultationListResponseDto>> getMyConsultations(
-            @RequestParam UUID patientId
+            @AuthenticationPrincipal Long kakaoId
     ) {
         List<ConsultationListResponseDto> response =
-                consultationService.getMyConsultations(patientId);
+                consultationService.getMyConsultations(kakaoId);
 
         return ResponseEntity.ok(response);
     }
 
-
     /**
      * 4) 날짜별 진료 조회 (캘린더)
-     * GET /api/v1/consultations/my/date?patientId=uuid&date=2025-11-29
+     * GET /api/consultations/my/date?date=2025-11-29
      */
     @GetMapping("/my/date")
     public ResponseEntity<List<ConsultationListResponseDto>> getMyConsultationsByDate(
-            @RequestParam UUID patientId,
-            @RequestParam String date // "YYYY-MM-DD"
+            @AuthenticationPrincipal Long kakaoId,
+            @RequestParam String date
     ) {
         LocalDate parsedDate = LocalDate.parse(date);
 
         List<ConsultationListResponseDto> response =
-                consultationService.getConsultationsByDate(patientId, parsedDate);
+                consultationService.getConsultationsByDate(kakaoId, parsedDate);
 
         return ResponseEntity.ok(response);
     }

@@ -10,15 +10,12 @@ import java.util.UUID;
 
 public interface ConsultationService {
 
-    // 진료 생성 (예약시간을 기반으로)
-    ConsultationCreateResponseDto startConsultation(Long appointmentId, UUID patientId);
+    ConsultationCreateResponseDto startConsultation(Long appointmentId, Long kakaoId);
 
-    // 진료 상세 조회
     ConsultationDetailResponseDto getConsultationDetail(Long consultationId);
 
-    // 나의 전체 진료 이력 조회
-    List<ConsultationListResponseDto> getMyConsultations(UUID patientId);
+    List<ConsultationListResponseDto> getMyConsultations(Long kakaoId);
 
-    // 캘린더 날짜별 진료 조회
-    List<ConsultationListResponseDto> getConsultationsByDate(UUID patientId, LocalDate date);
+    List<ConsultationListResponseDto> getConsultationsByDate(Long kakaoId, LocalDate date);
 }
+
