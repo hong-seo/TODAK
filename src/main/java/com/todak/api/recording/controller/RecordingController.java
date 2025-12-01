@@ -12,7 +12,7 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/recordings")
+@RequestMapping("/recordings")
 public class RecordingController {
 
     private final RecordingService recordingService;
