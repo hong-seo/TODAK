@@ -7,13 +7,14 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.HttpClientErrorException; // 추가된 import
 import org.springframework.web.client.RestTemplate;
 
 @Service
 @RequiredArgsConstructor
 public class KakaoAuthService {
 
-    private final RestTemplate restTemplate = new RestTemplate();
+    private final RestTemplate restTemplate;
 
     @Value("${kakao.user-info-uri}")
     private String userInfoUri;
@@ -26,7 +27,7 @@ public class KakaoAuthService {
     private String redirectUri;
 
     /**
-     * 1. 인가 코드로 카카오 Access Token 받아오기 (새로 추가된 메서드!)
+     * 1. 인가 코드로 카카오 Access Token 받아오기
      */
     public String getAccessToken(String authCode) {
         HttpHeaders headers = new HttpHeaders();
@@ -40,21 +41,35 @@ public class KakaoAuthService {
 
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
 
-        ResponseEntity<KakaoTokenResponse> response = restTemplate.exchange(
-                "https://kauth.kakao.com/oauth/token",
-                HttpMethod.POST,
-                request,
-                KakaoTokenResponse.class
-        );
+        // [수정 2] try-catch로 감싸서 에러 상세 확인
+        try {
+            ResponseEntity<KakaoTokenResponse> response = restTemplate.exchange(
+                    "https://kauth.kakao.com/oauth/token",
+                    HttpMethod.POST,
+                    request,
+                    KakaoTokenResponse.class
+            );
 
-        return response.getBody().getAccessToken();
+            return response.getBody().getAccessToken();
+
+        } catch (HttpClientErrorException e) {
+            // 🚨 여기서 에러 내용을 콘솔에 출력합니다.
+            String errorBody = e.getResponseBodyAsString();
+            System.out.println("==================================================");
+            System.out.println("🚨 [KakaoAuthService] 카카오 토큰 발급 실패!");
+            System.out.println("👉 상태 코드: " + e.getStatusCode());
+            System.out.println("👉 응답 내용: " + errorBody);
+            System.out.println("==================================================");
+
+            // 상세 내용을 포함하여 예외를 다시 던짐
+            throw new RuntimeException("카카오 로그인 실패 (토큰 요청): " + errorBody);
+        }
     }
 
     /**
-     * 2. Access Token으로 유저 정보 가져오기 (기존 메서드)
+     * 2. Access Token으로 유저 정보 가져오기 (기존 메서드 유지)
      */
     public Long getKakaoUserId(String accessToken) {
-        // ... (기존 코드 유지) ...
         try {
             HttpHeaders headers = new HttpHeaders();
             headers.set("Authorization", "Bearer " + accessToken);
@@ -73,7 +88,7 @@ public class KakaoAuthService {
 
         } catch (Exception e) {
             e.printStackTrace();
-            throw new RuntimeException("카카오 토큰이 유효하지 않습니다.");
+            throw new RuntimeException("카카오 유저 정보 조회 실패: " + e.getMessage());
         }
     }
 
@@ -86,7 +101,7 @@ public class KakaoAuthService {
     static class KakaoTokenResponse {
         private String access_token;
         private String refresh_token;
-        // 필요한 필드 더 추가 가능
+
         public String getAccessToken() { return access_token; }
     }
 }
