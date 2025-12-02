@@ -1,6 +1,5 @@
 package com.todak.api.summary.entity;
 
-import com.todak.api.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
