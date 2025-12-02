@@ -20,7 +20,6 @@ import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -31,30 +30,28 @@ public class AppointmentServiceImpl implements AppointmentService {
     private final DoctorRepository doctorRepository;
     private final UserRepository userRepository;
 
-    /** kakaoId → User UUID 변환 */
-    private UUID getUserUuid(Long kakaoId) {
-        User user = userRepository.findByKakaoId(kakaoId)
+    /** kakaoId → User 변환 */
+    private User getUser(Long kakaoId) {
+        return userRepository.findByKakaoId(kakaoId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
-        return user.getUserUuid();
     }
 
     /** 1. 예약 생성 */
     @Override
     public AppointmentResponseDto create(Long kakaoId, AppointmentCreateRequestDto request) {
 
-        UUID patientUuid = getUserUuid(kakaoId);
+        User patient = getUser(kakaoId);
 
         Hospital hospital = hospitalRepository.findById(request.getHospitalId())
-                .orElseThrow(() -> new IllegalArgumentException("hospital not found"));
+                .orElseThrow(() -> new IllegalArgumentException("Hospital not found"));
 
         Doctor doctor = null;
         if (request.getDoctorId() != null) {
-            doctor = doctorRepository.findById(request.getDoctorId())
-                    .orElse(null);
+            doctor = doctorRepository.findById(request.getDoctorId()).orElse(null);
         }
 
         Appointment appointment = Appointment.builder()
-                .patientId(patientUuid)
+                .patient(patient)   // ⭐ 핵심 수정 (UUID X → User 엔티티 넣기)
                 .hospital(hospital)
                 .doctor(doctor)
                 .datetime(request.getDatetime().atOffset(ZoneOffset.of("+09:00")))
@@ -70,12 +67,12 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Override
     public void cancel(Long kakaoId, AppointmentCancelRequest request) {
 
-        UUID patientUuid = getUserUuid(kakaoId);
+        User user = getUser(kakaoId);
 
         Appointment appointment = appointmentRepository.findById(request.getAppointmentId())
                 .orElseThrow(() -> new IllegalArgumentException("appointment not found"));
 
-        if (!appointment.getPatientId().equals(patientUuid)) {
+        if (!appointment.getPatient().getUserUuid().equals(user.getUserUuid())) {
             throw new IllegalArgumentException("invalid patient");
         }
 
@@ -86,9 +83,10 @@ public class AppointmentServiceImpl implements AppointmentService {
     /** 3. 나의 전체 예약 */
     @Override
     public List<AppointmentResponseDto> getMyAppointments(Long kakaoId) {
-        UUID patientUuid = getUserUuid(kakaoId);
 
-        return appointmentRepository.findByPatientId(patientUuid)
+        User user = getUser(kakaoId);
+
+        return appointmentRepository.findByPatient(user)
                 .stream()
                 .map(AppointmentResponseDto::from)
                 .toList();
@@ -97,12 +95,13 @@ public class AppointmentServiceImpl implements AppointmentService {
     /** 4. 오늘 나의 예약 */
     @Override
     public AppointmentResponseDto getTodayMyAppointment(Long kakaoId) {
-        UUID patientUuid = getUserUuid(kakaoId);
+
+        User user = getUser(kakaoId);
 
         OffsetDateTime now = OffsetDateTime.now();
 
         Appointment appt = appointmentRepository
-                .findTodayAppointment(patientUuid, now.toLocalDate())
+                .findTodayAppointment(user, now.toLocalDate())
                 .orElse(null);
 
         return (appt != null) ? AppointmentResponseDto.from(appt) : null;
@@ -111,6 +110,8 @@ public class AppointmentServiceImpl implements AppointmentService {
     /** 5. 병원 전체 예약 */
     @Override
     public List<AppointmentResponseDto> getAppointmentsByHospital(Long kakaoId, Long hospitalId) {
+
+        // 이 API는 user 기반 조건 필요 없음
         return appointmentRepository.findByHospital_HospitalId(hospitalId)
                 .stream()
                 .map(AppointmentResponseDto::from)

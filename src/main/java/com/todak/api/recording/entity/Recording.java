@@ -24,10 +24,6 @@ public class Recording {
     private Long recordingId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "patient_id", referencedColumnName = "user_uuid", nullable = false)
-    private User patient;
-
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "consultation_id", nullable = false)
     private Consultation consultation;
 

@@ -31,7 +31,7 @@ public class AppointmentResponseDto {
 
         return AppointmentResponseDto.builder()
                 .appointmentId(a.getAppointmentId())
-                .patientId(a.getPatientId())
+                .patientId(a.getPatient().getUserUuid())
 
                 .hospitalId(a.getHospital().getHospitalId())
                 .hospitalName(a.getHospital().getName())

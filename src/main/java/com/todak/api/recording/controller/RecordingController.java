@@ -3,12 +3,14 @@ package com.todak.api.recording.controller;
 import com.todak.api.recording.dto.response.RecordingDetailResponseDto;
 import com.todak.api.recording.entity.RecordingStatus;
 import com.todak.api.recording.service.RecordingService;
+import com.todak.api.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -16,6 +18,7 @@ import java.util.Map;
 public class RecordingController {
 
     private final RecordingService recordingService;
+    private final UserRepository userRepository;
 
     /** ----------------------------------------------------
      *  0. 녹음 인증 (병원 인증 코드 확인)
