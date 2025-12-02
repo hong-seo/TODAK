@@ -69,21 +69,21 @@ src/main/java/com.todak.api
 
 ### 🎙 Recording & Summary Pipeline
 
-1) 녹음 업로드
+### 1) 녹음 업로드
    - 클라이언트가 음성 파일 업로드
    - 서버가 S3에 저장하고 Recording 생성
 
-2) STT 요청 (Speech-to-Text)
+### 2) STT 요청 (Speech-to-Text)
    - 서버가 S3에서 음성 파일 다운로드
    - AI 서버에 파일 전달 → Whisper로 STT 수행
    - STT 결과(transcript, duration)를 Recording에 저장
 
-3) 요약 요청 (Summarization)
+### 3) 요약 요청 (Summarization)
    - STT 결과 텍스트를 AI 서버로 전달
    - 요약 모델이 상담 요약 생성
    - 결과를 Summary 엔티티로 저장
 
-4) 진료(Consultation)와 연결
+### 4) 진료(Consultation)와 연결
    - Recording과 Summary는 Consultation에 연결되어
      “한 번의 진료에 대한 음성 + STT + 요약” 패키지 완성
 
