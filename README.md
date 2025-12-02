@@ -16,7 +16,8 @@
 
 ## Architecture
 
-나중에
+<img width="2254" height="1274" alt="supabase-schema-kkfxxteavjukwkrdtycc (1)" src="https://github.com/user-attachments/assets/6e725b2a-9dbf-4729-bfe9-f34058ecdd3a" />
+
 
 ---
 
