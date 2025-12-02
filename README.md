@@ -36,6 +36,7 @@ STT 기반 진료 자동화, 건강 데이터 시각화, 병원 예약 등 모�
 - **State Management:** React Hooks, Context API
 - **Network:** Axios
 - **Chart:** Victory Native
+- 
 ---
 
 ## Architecture
@@ -61,7 +62,7 @@ src
  └─ utils             # 카카오 로그인, AsyncStorage 관련 유틸
 
  
-```
+---
 ## Core Logic Flows
 
 ### Authentication Flow
