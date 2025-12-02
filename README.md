@@ -1,95 +1,116 @@
-# TODAK Backend 🩺
+# TODAK Frontend
 
-병원 헬스케어 자동화 서비스 **TODAK** 의 백엔드 서버입니다.  
-
----
-## 백엔드 개발 팀원
-- 동국대학교 컴퓨터공학전공 23학번 최희수
-- 동국대학교 컴퓨터공학전공 23학번 최홍서
+병원 헬스케어 자동화 서비스 TODAK 의 모바일 애플리케이션(Android/iOS)입니다.
+STT 기반 진료 자동화, 건강 데이터 시각화, 병원 예약 등 모바일 환경에 특화된 기능을 제공합니다.
 
 ---
+## 👤 Frontend Team
+동국대학교 컴퓨터공학전공 23학번 서예원
 
+---
+## Features
+### 1. 로그인 & 인증
+   - 카카오 OAuth 기반 간편 로그인
+   - 딥링크 기반 인가 코드 처리 (todak://kakao-login)
+   - Access/Refresh Token 기반 자동 로그인
+
+### 2. 진료 녹음 & 업로드
+   - iOS/Android 마이크 권한 요청
+   - WAV 포맷(16bit, 44.1kHz)으로 고품질 녹음
+   - 녹음 파일 백엔드 업로드 → STT → 요약 자동 파이프라인 연동
+
+### 3. 병원 예약 & 일정 관리
+   - 병원/의사 리스트 조회
+   - 예약 가능한 시간대 선택 UI
+   - Monthly Calendar 기반 일정 확인
+   - 바텀시트로 예약 상세 내역 제공
+
+### 4. 건강 지표 모니터링
+   - 혈압/혈당/간수치 등 건강 데이터 조회
+   - SVG 기반 그래프 시각화 (Victory Native)
+   - AI 분석 코멘트 제공
 
 ## Tech Stack
-- **Language:** Java 17  
-- **Framework:** Spring Boot  
-- **Database:** PostgreSQL(Supabase)
-- **Storage:** AWS S3
-
-<div>
-<img src="https://img.shields.io/badge/java-007396?style=for-the-badge&logo=java&logoColor=white"/> 
-<img src="https://img.shields.io/badge/springboot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white"/> 
-<img src="https://img.shields.io/badge/postgresql-4169E1?style=for-the-badge&logo=postgresql&logoColor=white"/>
-</div>
-
-
+- **Language:** TypeScript
+- **Framework:** React Native (CLI)
+- **State Management:** React Hooks, Context API
+- **Network:** Axios
+- **Chart:** Victory Native
 ---
 
 ## Architecture
 
-나중에
-  
+나중에 할거면..?
 
 ---
 
 ##  Project Structure
           
-```bash          
-src/main/java/com.todak.api
- ├─ appointment      # 진료 날짜·시간 선택 및 예약 후보 조회
- ├─ auth             # 로그인/인증 (추후 확장)
- ├─ common           # 공통 응답, 예외 처리, 유틸
- ├─ config           # STT 요청 템플릿 및 애플리케이션 설정
- ├─ consultation     # 진료(상담) 생성·조회 도메인
- ├─ health           # 건강 지표 기록 관리 (추후 확장)
- ├─ hospital         # 병원/의사/진료과 조회 도메인
- ├─ infra
- │    ├─ s3          # AWS S3 업로드/다운로드
- │    └─ ai          # AI 서버(STT/요약) 통신 클라이언트
- ├─ recording        # 녹음 인증·업로드·STT 요청 처리
- ├─ summary          # STT 결과 요약 도메인
- └─ user             # 사용자 관리
+src
+ ├─ api               # Axios 인스턴스 및 API 함수
+ ├─ assets            # 아이콘, 로고 등 정적 이미지
+ ├─ components        # 재사용 가능한 UI 요소
+ │   ├─ Calendar      # 캘린더 컴포넌트
+ │   ├─ Health        # 건강 지표 그래프/뷰
+ │   ├─ Home          # 메인 화면
+ │   ├─ Login         # 로그인 슬라이드 / 온보딩
+ │   ├─ Mycare        # 진료 기록 / 카테고리 탭
+ │   └─ Setting       # 설정 화면
+ ├─ navigation        # 네비게이션(Stack/Bottom Tab)
+ ├─ screens           # 주요 페이지(Login/Main/Health/Mycare 등)
+ └─ utils             # 카카오 로그인, AsyncStorage 관련 유틸
+
  
 ```
-## Core Flows
+## Core Logic Flows
 
-### 🔐 Authentication
+### Authentication Flow
+1. 로그인 버튼 → 카카오 OAuth 인가 요청
+2. 인증 완료 후 딥링크(todak://kakao-login)로 인가 코드 수신
+3. 인가 코드 기반 Access/Refresh Token 발급
+4. 토큰 저장 후 자동 로그인 처리
 
-### 1) 카카오 로그인 (User Login)
-   - **토큰 교환 & 유저 정보**: 백엔드는 프론트가 인가 코드를 사용해 카카오 서버에서 액세스 토큰을 받아서 주면, 이를 통해 고유 유저 ID를 조회
-   - **자동 회원가입/로그인**: DB 조회 후 신규 유저면 자동 회원가입, 기존 유저면 로그인 처리
-   - **JWT 발급**: 서비스 전용 JWT(Access Token)을 생성하여 클라이언트에 반환
+### Recording & Upload Flow
+1. 마이크 권한 요청
+2. 녹음 시작/종료 제어 (버튼 애니메이션 포함)
+3. 로컬 임시 저장 후 S3 업로드
+4. 백엔드에서 STT → 요약까지 자동 진행
 
-### 2) API 요청 인증 (JWT Verification)
-   - **헤더 검사**: API 요청 시 헤더의 `Authorization: Bearer {Token}` 확인
-   - **필터링**: `JwtAuthenticationFilter`에서 토큰의 유효성 및 만료 여부 검증
-   - **인증 처리**: 검증 통과 시 `SecurityContext`에 인증 정보를 저장하여 API 접근 허용
+### Reservation Flow
+1. 병원 → 의사 → 시간대 선택
+2. 예약 요청
+3. 월별 캘린더에서 예약 내역 확인
+4. 날짜 클릭 시 상세 바텀시트 출력
 
-
-
-
-### 🎙 Recording & Summary Pipeline
-
-### 1) 녹음 업로드
-   - 클라이언트가 음성 파일 업로드
-   - 서버가 S3에 저장하고 Recording 생성
-
-### 2) STT 요청 (Speech-to-Text)
-   - 서버가 S3에서 음성 파일 다운로드
-   - AI 서버에 파일 전달 → Whisper로 STT 수행
-   - STT 결과(transcript, duration)를 Recording에 저장
-
-### 3) 요약 요청 (Summarization)
-   - STT 결과 텍스트를 AI 서버로 전달
-   - 요약 모델이 상담 요약 생성
-   - 결과를 Summary 엔티티로 저장
-
-### 4) 진료(Consultation)와 연결
-   - Recording과 Summary는 Consultation에 연결되어
-     “한 번의 진료에 대한 음성 + STT + 요약” 패키지 완성
+### Health Flow
+1. 서버에서 건강 데이터 조회
+2. Victory Native 그래프로 시각화
+3. 정상 범위 표시 + AI 코멘트 출력
 
 
 ---
 
+## Getting Started
 
+### 1. Install Dependencies
+npm install
+또는
+yarn install
+
+### 2. iOS Setup (Mac 전용)
+cd ios
+pod install
+cd ..
+
+### 3. Run Application
+**1) Metro 서버 실행**
+npm start
+
+**2) Android 실행**
+npm run android
+
+**3) iOS 실행**
+npm run ios
+
+---
 
