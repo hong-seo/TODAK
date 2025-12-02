@@ -24,11 +24,11 @@
 ## Project Structure
 ```bash         
 src/main/java/com.todak.api
- ├─ appointment      # 진료 날짜·시간 선택 및 예약 후보 조회
- ├─ auth             # 로그인/인증 (추후 확장)
+ ├─ appointment      # 예약 생성·조회 도메인
+ ├─ auth             # 로그인/인증 
  ├─ common           # 공통 응답, 예외 처리, 유틸
  ├─ config           # STT 요청 템플릿 및 애플리케이션 설정
- ├─ consultation     # 진료(상담) 생성·조회 도메인
+ ├─ consultation     # 진료 생성·조회 도메인
  ├─ health           # 건강 지표 기록 관리 (추후 확장)
  ├─ hospital         # 병원/의사/진료과 조회 도메인
  ├─ infra
