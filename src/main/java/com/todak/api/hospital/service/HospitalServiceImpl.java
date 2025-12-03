@@ -96,7 +96,7 @@ public class HospitalServiceImpl implements HospitalService {
                 .toList();
 
         // 3. 운영시간 JSONB → DTO
-        AvailableHoursDto hoursDto = toAvailableHoursDto(hospital.getOpenHours());
+        //AvailableHoursDto hoursDto = toAvailableHoursDto(hospital.getOpenHours());
 
         return HospitalDetailResponseDto.builder()
                 .hospitalId(hospital.getHospitalId())
@@ -106,7 +106,7 @@ public class HospitalServiceImpl implements HospitalService {
                 .introduction(hospital.getIntroduction())
                 .favorite(false)
                 .doctors(doctorDtos)
-                .availableHours(hoursDto)
+                //.availableHours(hoursDto)
                 .build();
     }
 
@@ -120,6 +120,7 @@ public class HospitalServiceImpl implements HospitalService {
     }
 
     // DB의 JSONB(open_hours) → DTO 변환
+    /*
     private AvailableHoursDto toAvailableHoursDto(Object jsonbObj) {
 
         if (jsonbObj == null)
@@ -138,4 +139,5 @@ public class HospitalServiceImpl implements HospitalService {
                 .sun(map.get("sun"))
                 .build();
     }
+     */
 }

@@ -1,4 +1,4 @@
-package com.todak.api.hospital.dto.response;
+/*package com.todak.api.hospital.dto.response;
 
 import lombok.*;
 
@@ -16,3 +16,4 @@ public class AvailableHoursDto {
     private String sat;
     private String sun;
 }
+ */
