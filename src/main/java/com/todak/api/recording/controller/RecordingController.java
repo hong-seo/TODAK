@@ -7,6 +7,7 @@ import com.todak.api.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import java.util.Map;
@@ -58,7 +59,7 @@ public class RecordingController {
     )
     public ResponseEntity<RecordingDetailResponseDto> uploadRecording(
             @PathVariable Long consultationId,
-            @RequestParam("kakaoId") Long kakaoId,
+            @AuthenticationPrincipal Long kakaoId,
             @RequestParam("file") MultipartFile file
     ) {
         RecordingDetailResponseDto dto =
