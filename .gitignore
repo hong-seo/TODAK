@@ -40,8 +40,7 @@ Spring Boot & Security
 
 DB 비밀번호, API 키 등 민감한 설정 파일 무시
 
-src/main/resources/application.yml
-src/main/resources/application-.yml
+
 src/main/resources/application.properties
 src/main/resources/application-.properties
 
