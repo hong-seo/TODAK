@@ -30,8 +30,8 @@ public class Hospital {
     @Column(length = 20)
     private String phone;
 
-    @Column(columnDefinition = "jsonb")
-    private String openHours;   // JSONB 그대로 저장
+    //@Column(columnDefinition = "jsonb")
+    //private String openHours;   // JSONB 그대로 저장
 
     @Column(length = 16)
     private String hospitalAuthKey;

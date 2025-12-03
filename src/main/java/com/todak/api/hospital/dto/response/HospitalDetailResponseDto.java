@@ -20,5 +20,5 @@ public class HospitalDetailResponseDto {
 
     private List<DoctorDto> doctors;
 
-    private AvailableHoursDto availableHours;
+    //private AvailableHoursDto availableHours;
 }
